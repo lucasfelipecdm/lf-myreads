@@ -6,8 +6,10 @@ import "./App.css"
 
 class Search extends React.Component {
     state = {
-        query: '',
-        queryResults: []
+        changeShelfBooks: (book, shelf) => {
+            BooksAPI.update(book, shelf)
+        },
+        queryResults: [],
     }
 
     doTheSearch(query) {
@@ -16,14 +18,28 @@ class Search extends React.Component {
                 queryResults: []
             })
         } else {
-            BooksAPI.search(query).then(books => {
-                if (books.error) {
+            BooksAPI.search(query).then(booksSearch => {
+                if (booksSearch.error) {
                     this.setState({
                         queryResults: []
                     })
                 } else {
+                    /* BooksAPI.getAll().then((booksInShelf) => {
+                        booksSearch = booksInShelf.map((bookInShelf) => {
+                            var bookSearchNew = booksSearch.map((bookInSearch) => {
+                                if (bookInShelf.id === bookInSearch.id) {
+                                    bookInSearch.shelf = bookInShelf.shelf;
+                                }
+                            })
+                            return bookSearchNew;
+                        })
+                        
+                    }) 
+                    ** CONSEGUI ATUALIZAR O SHELF DOS LIVROS, PORÉM, NÃO SEI COMO RETORNAR A ARRAY ATUALIZADA
+                    DESSE JEITO O SHELF SEMPRE FICA EM NONE PARA LIVROS QUE APARECEM NA PESQUISA
+                    */
                     this.setState({
-                        queryResults: books
+                        queryResults: booksSearch
                     })
                 }
             });
@@ -38,20 +54,11 @@ class Search extends React.Component {
                         <div className="close-search"></div>
                     </Link>
                     <div className="search-books-input-wrapper">
-                        {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
                         <input onChange={(event) => this.doTheSearch(event.target.value)} type="text" placeholder="Search by title or author" />
-
                     </div>
                 </div>
                 <div className="search-books-results">
-                    <ShelfTails books={this.state.queryResults} title="Search results:"></ShelfTails>
+                    <ShelfTails changeShelfBooks={this.state.changeShelfBooks} books={this.state.queryResults} title="Search results:"></ShelfTails>
                 </div>
             </div>
         );
