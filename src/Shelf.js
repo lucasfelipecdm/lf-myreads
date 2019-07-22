@@ -10,12 +10,19 @@ class Shelf extends React.Component {
         currentlyReadingBooks: [],
         wantReadBooks: [],
         readBooks: [],
+        changeShelfBooks: (book, shelf) => {
+            BooksAPI.update(book, shelf).then(() => this.refreshData())
+        }
     }
 
     componentDidMount() {
-       BooksAPI.getAll().then((books) => {
+        this.refreshData();
+    }
+
+    refreshData = () => {
+        BooksAPI.getAll().then((books) => {
             this.setState({
-                books : books,
+                books: books,
                 currentlyReadingBooks: books.filter(book => book.shelf === "currentlyReading"),
                 wantReadBooks: books.filter(book => book.shelf === "wantToRead"),
                 readBooks: books.filter(book => book.shelf === "read")
@@ -31,9 +38,9 @@ class Shelf extends React.Component {
                 </div>
                 <div className="list-books-content">
                     <div>
-                        <ShelfTails books={this.state.currentlyReadingBooks} title="Currently Reading"></ShelfTails>
-                        <ShelfTails books={this.state.wantReadBooks} title="Want to Read"></ShelfTails>
-                        <ShelfTails books={this.state.readBooks} title="Read"></ShelfTails>
+                        <ShelfTails changeShelfBooks={this.state.changeShelfBooks} books={this.state.currentlyReadingBooks} title="Currently Reading"></ShelfTails>
+                        <ShelfTails changeShelfBooks={this.state.changeShelfBooks} books={this.state.wantReadBooks} title="Want to Read"></ShelfTails>
+                        <ShelfTails changeShelfBooks={this.state.changeShelfBooks} books={this.state.readBooks} title="Read"></ShelfTails>
                         {/* <div className="lds-ring"><div></div><div></div><div></div><div></div></div> */}
                     </div>
                 </div>
