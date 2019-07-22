@@ -13,7 +13,7 @@ class Search extends React.Component {
     }
 
     doTheSearch(query) {
-        if (query === '') {
+        if (query === '' || query === undefined) {
             this.setState({
                 queryResults: []
             })
@@ -24,23 +24,18 @@ class Search extends React.Component {
                         queryResults: []
                     })
                 } else {
-                    /* BooksAPI.getAll().then((booksInShelf) => {
-                        booksSearch = booksInShelf.map((bookInShelf) => {
-                            var bookSearchNew = booksSearch.map((bookInSearch) => {
-                                if (bookInShelf.id === bookInSearch.id) {
-                                    bookInSearch.shelf = bookInShelf.shelf;
-                                }
-                            })
-                            return bookSearchNew;
+                    BooksAPI.getAll().then((allBooksInShelf) => {
+                        booksSearch = booksSearch.map((bookSearch) => {
+                            const bookInShelf = allBooksInShelf.find(bookInShelf => bookInShelf.id === bookSearch.id);
+                            if (bookInShelf) {
+                                bookSearch.shelf = bookInShelf.shelf
+                            }
+                            return bookSearch;
                         })
-                        
-                    }) 
-                    ** CONSEGUI ATUALIZAR O SHELF DOS LIVROS, PORÉM, NÃO SEI COMO RETORNAR A ARRAY ATUALIZADA
-                    DESSE JEITO O SHELF SEMPRE FICA EM NONE PARA LIVROS QUE APARECEM NA PESQUISA
-                    */
-                    this.setState({
-                        queryResults: booksSearch
-                    })
+                        this.setState({
+                            queryResults: booksSearch
+                        });
+                    });
                 }
             });
         }
