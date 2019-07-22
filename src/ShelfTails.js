@@ -1,9 +1,18 @@
+import * as BooksAPI from './BooksAPI'
 import React from 'react'
 import './App.css'
 
 class ShelfTails extends React.Component {
+    
+    changeShelfBooks = (book, shelf) => {
+        console.log(book, shelf);
+        BooksAPI.update(book, shelf).then((books)=>{
+            console.log(book, shelf, books);
+        })
+    }
+    
     render() {
-        
+        console.log(this.props.books)
         return (
             <div className="bookshelf">
                 <h2 className="bookshelf-title">{this.props.title}</h2>
@@ -15,7 +24,11 @@ class ShelfTails extends React.Component {
                                     <div className="book-top">
                                         <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})`}}></div>
                                         <div className="book-shelf-changer">
-                                            <select>
+                                            <select
+                                            defaultValue={`${book.shelf ? book.shelf : 'none'}`}
+                                            onChange={
+                                                    (event)=> this.changeShelfBooks(book, event.target.value)
+                                                }>
                                                 <option value="move" disabled>Move to...</option>
                                                 <option value="currentlyReading">Currently Reading</option>
                                                 <option value="wantToRead">Want to Read</option>

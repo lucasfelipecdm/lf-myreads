@@ -10,7 +10,7 @@ class Shelf extends React.Component {
         currentlyReadingBooks: [],
         wantReadBooks: [],
         readBooks: [],
-    }  
+    }
 
     componentDidMount() {
        BooksAPI.getAll().then((books) => {
@@ -34,6 +34,7 @@ class Shelf extends React.Component {
                         <ShelfTails books={this.state.currentlyReadingBooks} title="Currently Reading"></ShelfTails>
                         <ShelfTails books={this.state.wantReadBooks} title="Want to Read"></ShelfTails>
                         <ShelfTails books={this.state.readBooks} title="Read"></ShelfTails>
+                        {/* <div className="lds-ring"><div></div><div></div><div></div><div></div></div> */}
                     </div>
                 </div>
                 <Link to='/search'>

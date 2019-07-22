@@ -1,8 +1,35 @@
-import { Link } from "react-router-dom";
-import React from 'react';
-import './App.css';
+import { Link } from "react-router-dom"
+import * as BooksAPI from "./BooksAPI"
+import ShelfTails from "./ShelfTails"
+import React from "react"
+import "./App.css"
 
 class Search extends React.Component {
+    state = {
+        query: '',
+        queryResults: []
+    }
+
+    doTheSearch(query) {
+        if (query === '') {
+            this.setState({
+                queryResults: []
+            })
+        } else {
+            BooksAPI.search(query).then(books => {
+                if (books.error) {
+                    this.setState({
+                        queryResults: []
+                    })
+                } else {
+                    this.setState({
+                        queryResults: books
+                    })
+                }
+            });
+        }
+    }
+
     render() {
         return (
             <div className="search-books">
@@ -19,12 +46,12 @@ class Search extends React.Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                        <input type="text" placeholder="Search by title or author" />
+                        <input onChange={(event) => this.doTheSearch(event.target.value)} type="text" placeholder="Search by title or author" />
 
                     </div>
                 </div>
                 <div className="search-books-results">
-                    <ol className="books-grid"></ol>
+                    <ShelfTails books={this.state.queryResults} title="Search results:"></ShelfTails>
                 </div>
             </div>
         );
